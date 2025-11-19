@@ -147,7 +147,7 @@ return {
 
 	{
 		"dundalek/lazy-lsp.nvim",
-		version = "*",
+		commit = "ccaaed19d7963bdc06000052eade993452b7ad86",
 		dependencies = {
 			"neovim/nvim-lspconfig",
 			"saghen/blink.cmp",
@@ -159,6 +159,16 @@ return {
 				excluded_servers = {
 					"jdtls",
 					"ccls",
+					"buf_ls",
+					--"clangd",
+					"sourcekit",
+					"intelliphense",
+					"flow", -- prefer eslint and ts_ls
+					"ltex", -- grammar tool using too much CPU
+					"quick_lint_js", -- prefer eslint and ts_ls
+					"denols",
+					"oxlint", -- prefer eslint
+					"scry", -- archived on Jun 1, 2023
 				},
 				preferred_servers = {
 					markdown = {},
