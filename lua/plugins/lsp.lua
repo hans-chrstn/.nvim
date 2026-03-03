@@ -146,54 +146,14 @@ return {
 	},
 
 	{
-		"dundalek/lazy-lsp.nvim",
-		commit = "ccaaed19d7963bdc06000052eade993452b7ad86",
-		dependencies = {
-			"neovim/nvim-lspconfig",
-			"saghen/blink.cmp",
-		},
-		event = { "BufReadPre", "BufNewFile" },
-		opts = function()
-			return {
-				use_vim_lsp_config = true,
-				excluded_servers = {
-					"jdtls",
-					"ccls",
-					"buf_ls",
-					--"clangd",
-					"sourcekit",
-					"intelliphense",
-					"flow", -- prefer eslint and ts_ls
-					"ltex", -- grammar tool using too much CPU
-					"quick_lint_js", -- prefer eslint and ts_ls
-					"denols",
-					"oxlint", -- prefer eslint
-					"scry", -- archived on Jun 1, 2023
-				},
-				preferred_servers = {
-					markdown = {},
-					python = { "pyright" },
-					rust = { "rust_analyzer" },
-					javascript = { "ts_ls" },
-					typescript = { "ts_ls" },
-					lua = { "lua_ls" },
-					nix = { "nil_ls" },
-					c = { "clangd" },
-					cpp = { "clangd" },
-					go = { "gopls" },
-				},
-			}
-		end,
-	},
-
-	{
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			"saghen/blink.cmp",
-			"dundalek/lazy-lsp.nvim",
 		},
 		config = function()
+			local capabilities = require("blink.cmp").get_lsp_capabilities()
+
 			vim.diagnostic.config({
 				virtual_text = {
 					spacing = 4,
@@ -261,7 +221,37 @@ return {
 				end,
 			})
 
-			local capabilities = require("blink.cmp").get_lsp_capabilities()
+			local servers = {
+				pyright = {},
+				rust_analyzer = {},
+				ts_ls = {},
+				lua_ls = {
+					settings = {
+						Lua = {
+							diagnostics = {
+								globals = { "vim" },
+							},
+							workspace = {
+								checkThirdParty = false,
+								library = {
+									vim.env.VIMRUNTIME,
+								},
+							},
+							telemetry = { enable = false },
+						},
+					},
+				},
+				nil_ls = {},
+				clangd = {},
+				gopls = {},
+				marksman = {},
+			}
+
+			for name, config in pairs(servers) do
+				config.capabilities = capabilities
+				vim.lsp.config(name, config)
+				vim.lsp.enable(name)
+			end
 
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = { "gd", "gdscript", "gdscript3" },

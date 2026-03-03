@@ -1,22 +1,19 @@
 return {
-  "kylechui/nvim-surround",
-  version = "*",
-  event = "VeryLazy",
-  config = function()
-    require("nvim-surround").setup({
-      keymaps = {
-        insert = "<C-g>s",
-        insert_line = "<C-g>S",
-        normal = "ys",
-        normal_cur = "yss",
-        normal_line = "yS",
-        normal_cur_line = "ySS",
-        visual = "S",
-        visual_line = "gS",
-        delete = "ds",
-        change = "cs",
-        change_line = "cS",
-      },
-    })
-  end,
+	"kylechui/nvim-surround",
+	version = "*",
+	event = "VeryLazy",
+	opts = {},
+	keys = {
+		{ "ys", desc = "Add surround" },
+		{ "yss", desc = "Add surround to line" },
+		{ "yS", desc = "Add surround to line" },
+		{ "ySS", desc = "Add surround to line" },
+		{ "S", mode = "v", desc = "Add surround in visual" },
+		{ "gS", mode = "v", desc = "Add surround in visual line" },
+		{ "ds", desc = "Delete surround" },
+		{ "cs", desc = "Change surround" },
+		{ "cS", desc = "Change surround line" },
+		{ "<C-g>s", mode = "i", desc = "Add surround in insert" },
+		{ "<C-g>S", mode = "i", desc = "Add surround in insert line" },
+	},
 }
