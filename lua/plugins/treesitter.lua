@@ -83,9 +83,8 @@ return {
 					local bufnr = args.buf
 					local lang = vim.treesitter.language.get_lang(vim.bo[bufnr].filetype) or vim.bo[bufnr].filetype
 
-					local ok, _ = pcall(vim.treesitter.get_parser, bufnr, lang)
+					local ok = pcall(vim.treesitter.start, bufnr, lang)
 					if ok then
-						vim.treesitter.start(bufnr, lang)
 						vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 					end
 				end,
