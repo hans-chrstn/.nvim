@@ -1,164 +1,24 @@
 return {
 	{
-		"nvimdev/lspsaga.nvim",
-		event = "LspAttach",
-		dependencies = {
-			"nvim-treesitter/nvim-treesitter",
-			"nvim-tree/nvim-web-devicons",
-		},
+		"folke/lazydev.nvim",
+		ft = "lua",
 		opts = {
-			ui = {
-				border = "none",
-				devicon = true,
-				title = true,
-				expand = "",
-				collapse = "",
-				code_action = "",
-				actionfix = "",
-				lines = { "┗", "┣", "┃", "━", "┏" },
-				kind = {},
-				imp_sign = "󰳛 ",
+			library = {
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
 			},
-			lightbulb = {
-				enable = false,
-				sign = false,
-				virtual_text = false,
-			},
-			code_action = {
-				num_shortcut = true,
-				show_server_name = true,
-				keys = {
-					quit = "<Esc>",
-					exec = "<CR>",
-				},
-			},
-			diagnostic = {
-				on_insert = false,
-				on_insert_follow = false,
-				insert_winblend = 0,
-				show_code_action = false,
-				show_source = true,
-				jump_num_shortcut = true,
-				max_width = 0.7,
-				custom_fix = nil,
-				custom_msg = nil,
-				text_hl_follow = false,
-				border_follow = true,
-				keys = {
-					exec_action = "o",
-					quit = "q",
-				},
-			},
-			hover = {
-				max_width = 0.6,
-				open_link = "gx",
-				open_browser = "!chromium",
-			},
-			rename = {
-				quit = "<Esc>",
-				exec = "<CR>",
-				mark = "x",
-				confirm = "<CR>",
-				in_select = true,
-				whole_project = true,
-			},
-			symbol_in_winbar = {
-				enable = true,
-				separator = " › ",
-			},
-			finder = {
-				max_height = 0.5,
-				min_width = 30,
-				force_max_height = false,
-				keys = {
-					jump_to = "p",
-					expand_or_jump = "o",
-					vsplit = "s",
-					split = "i",
-					tabe = "t",
-					tabnew = "r",
-					quit = { "q", "<ESC>" },
-					close_in_preview = "<ESC>",
-				},
-			},
-			definition = {
-				edit = "<C-c>o",
-				vsplit = "<C-c>v",
-				split = "<C-c>i",
-				tabe = "<C-c>t",
-				quit = "q",
-			},
-			outline = {
-				win_position = "right",
-				win_with = "",
-				win_width = 30,
-				show_detail = true,
-				auto_preview = true,
-				auto_refresh = true,
-				auto_close = true,
-				custom_sort = nil,
-				keys = {
-					jump = "o",
-					expand_collapse = "u",
-					quit = "q",
-				},
-			},
-			callhierarchy = {
-				show_detail = false,
-				keys = {
-					edit = "e",
-					vsplit = "s",
-					split = "i",
-					tabe = "t",
-					jump = "o",
-					quit = "q",
-					expand_collapse = "u",
-				},
-			},
-			beacon = {
-				enable = true,
-				frequency = 7,
-			},
-			implement = {
-				enable = false,
-				sign = true,
-				lang = {},
-				virtual_text = true,
-				priority = 100,
-			},
-		},
-		keys = {
-			{ "gh", "<cmd>Lspsaga finder<CR>", desc = "LSP Finder" },
-			{
-				"<leader>ca",
-				"<cmd>Lspsaga code_action<CR>",
-				mode = { "n", "v" },
-				desc = "Code Action",
-			},
-			{ "gp", "<cmd>Lspsaga peek_definition<CR>", desc = "Peek Definition" },
-			{ "gd", "<cmd>Lspsaga goto_definition<CR>", desc = "Go to Definition" },
-			{ "gl", "<cmd>Lspsaga show_line_diagnostics<CR>", desc = "Line Diagnostics" },
-			{ "[d", "<cmd>Lspsaga diagnostic_jump_prev<CR>", desc = "Previous Diagnostic" },
-			{ "]d", "<cmd>Lspsaga diagnostic_jump_next<CR>", desc = "Next Diagnostic" },
-			{ "<leader>o", "<cmd>Lspsaga outline<CR>", desc = "Toggle Outline" },
-			{ "K", "<cmd>Lspsaga hover_doc<CR>", desc = "Hover Documentation" },
 		},
 	},
-
 	{
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" },
-		dependencies = {
-			"saghen/blink.cmp",
-		},
+		dependencies = { "saghen/blink.cmp" },
 		config = function()
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
+			local health = require("dotfiles.health")
+			local obsidian = require("dotfiles.obsidian")
 
 			vim.diagnostic.config({
-				virtual_text = {
-					spacing = 4,
-					prefix = "●",
-				},
+				virtual_text = { spacing = 4, prefix = "●" },
 				signs = {
 					text = {
 						[vim.diagnostic.severity.ERROR] = "✘",
@@ -176,9 +36,6 @@ return {
 					header = "Diagnostics:",
 					prefix = "  ",
 					suffix = "  ",
-					format = function(diagnostic)
-						return " " .. diagnostic.message .. " "
-					end,
 					max_width = 80,
 					max_height = 20,
 					focusable = false,
@@ -186,91 +43,174 @@ return {
 				},
 			})
 
+			local lsp_group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
+			local highlight_group = vim.api.nvim_create_augroup("UserLspHighlight", { clear = true })
+
 			vim.api.nvim_create_autocmd("LspAttach", {
-				group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
+				group = lsp_group,
 				callback = function(event)
 					local bufnr = event.buf
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
+					if not client then
+						return
+					end
 
 					local function map(mode, lhs, rhs, desc)
 						vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc, silent = true })
 					end
 
-					map("n", "gi", vim.lsp.buf.implementation, "Go to Implementation")
-					map("n", "gs", vim.lsp.buf.signature_help, "Signature Help")
+					map("n", "gd", function()
+						Snacks.picker.lsp_definitions()
+					end, "Go to definition")
+					map("n", "gD", function()
+						Snacks.picker.lsp_declarations()
+					end, "Go to declaration")
+					map("n", "gi", function()
+						Snacks.picker.lsp_implementations()
+					end, "Go to implementation")
+					map("n", "gy", function()
+						Snacks.picker.lsp_type_definitions()
+					end, "Go to type definition")
+					map("n", "gr", function()
+						Snacks.picker.lsp_references()
+					end, "References")
+					map({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
+					map("n", "<leader>cr", vim.lsp.buf.rename, "Rename symbol")
+					map("n", "K", function()
+						vim.lsp.buf.hover({ border = "none", max_width = 80, max_height = 20 })
+					end, "Hover documentation")
+					map("n", "gK", function()
+						vim.lsp.buf.signature_help({ border = "none", max_width = 80 })
+					end, "Signature help")
+					map("n", "[d", function()
+						vim.diagnostic.jump({ count = -1, float = true })
+					end, "Previous diagnostic")
+					map("n", "]d", function()
+						vim.diagnostic.jump({ count = 1, float = true })
+					end, "Next diagnostic")
+					map("n", "<leader>cd", function()
+						vim.diagnostic.open_float({ focus = false })
+					end, "Line diagnostics")
 
-					if client and client:supports_method("textDocument/documentHighlight") then
-						local hl_group = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
+					if client:supports_method("textDocument/documentHighlight", bufnr) then
+						vim.api.nvim_clear_autocmds({ group = highlight_group, buffer = bufnr })
 						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 							buffer = bufnr,
-							group = hl_group,
+							group = highlight_group,
 							callback = vim.lsp.buf.document_highlight,
 						})
 						vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
 							buffer = bufnr,
-							group = hl_group,
+							group = highlight_group,
 							callback = vim.lsp.buf.clear_references,
 						})
 					end
 
-					if client and client:supports_method("textDocument/inlayHint") then
+					if client:supports_method("textDocument/inlayHint", bufnr) then
 						map("n", "<leader>th", function()
-							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }))
-						end, "Toggle Inlay Hints")
+							local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+							vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+						end, "Toggle inlay hints")
 					end
 				end,
 			})
 
+			vim.api.nvim_create_autocmd("LspDetach", {
+				group = lsp_group,
+				callback = function(event)
+					vim.lsp.buf.clear_references()
+					vim.schedule(function()
+						local clients = vim.lsp.get_clients({ bufnr = event.buf, method = "textDocument/documentHighlight" })
+						if #clients == 0 then
+							vim.api.nvim_clear_autocmds({ group = highlight_group, buffer = event.buf })
+						end
+					end)
+				end,
+			})
+
+			local dotfiles = vim.fn.expand("~/.dotfiles")
 			local servers = {
 				pyright = {},
-				rust_analyzer = {},
+				rust_analyzer = {
+					settings = {
+						["rust-analyzer"] = {
+							files = { exclude = { ".direnv", ".git", "target" } },
+						},
+					},
+				},
 				ts_ls = {},
 				jdtls = {},
 				lua_ls = {
 					settings = {
 						Lua = {
-							diagnostics = {
-								globals = { "vim" },
-							},
-							workspace = {
-								checkThirdParty = false,
-								library = {
-									vim.env.VIMRUNTIME,
-								},
-							},
+							diagnostics = { globals = { "vim", "Snacks" } },
+							workspace = { checkThirdParty = false },
 							telemetry = { enable = false },
 						},
 					},
 				},
-				nil_ls = {},
-				clangd = {},
+				nixd = {
+					settings = {
+						nixd = {
+							nixpkgs = { expr = 'import (builtins.getFlake "' .. dotfiles .. '").inputs.nixpkgs { }' },
+							options = {
+								nixos = { expr = '(builtins.getFlake "' .. dotfiles .. '").nixosConfigurations.jin.options' },
+								["home-manager"] = {
+									expr = '(builtins.getFlake "'
+										.. dotfiles
+										.. '").nixosConfigurations.jin.options.home-manager.users.type.getSubOptions []',
+								},
+							},
+						},
+					},
+				},
+				clangd = {
+					cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=never" },
+				},
 				gopls = {},
-				marksman = {},
+				marksman = {
+					root_dir = function(bufnr, on_dir)
+						if obsidian.is_vault(bufnr) then
+							return
+						end
+						on_dir(vim.fs.root(bufnr, { ".marksman.toml", ".git" }))
+					end,
+				},
+			}
+			local server_commands = {
+				pyright = "pyright-langserver",
+				rust_analyzer = "rust-analyzer",
+				ts_ls = "typescript-language-server",
+				jdtls = "jdtls",
+				lua_ls = "lua-language-server",
+				nixd = "nixd",
+				clangd = "clangd",
+				gopls = "gopls",
+				marksman = "marksman",
 			}
 
+			vim.lsp.config("*", { capabilities = capabilities })
 			for name, config in pairs(servers) do
-				config.capabilities = capabilities
 				vim.lsp.config(name, config)
-				vim.lsp.enable(name)
+				if health.has(server_commands[name]) then
+					vim.lsp.enable(name)
+				end
 			end
 
 			vim.api.nvim_create_autocmd("FileType", {
+				group = lsp_group,
 				pattern = { "gd", "gdscript", "gdscript3" },
-				callback = function()
-					local root = vim.fs.dirname(vim.fs.find({ "project.godot", ".git" }, {
-						path = vim.api.nvim_buf_get_name(0),
+				callback = function(event)
+					local marker = vim.fs.find({ "project.godot", ".git" }, {
+						path = vim.api.nvim_buf_get_name(event.buf),
 						upward = true,
-					})[1])
-
-					if root then
+					})[1]
+					if marker then
 						vim.lsp.start({
 							name = "Godot",
 							cmd = vim.lsp.rpc.connect("127.0.0.1", 6005),
-							root_dir = root,
+							root_dir = vim.fs.dirname(marker),
 							capabilities = capabilities,
-							on_attach = function()
-								vim.notify("Godot LSP connected!", vim.log.levels.INFO)
-							end,
 						})
 					end
 				end,

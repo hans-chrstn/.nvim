@@ -104,9 +104,27 @@ return {
 						},
 						align = "center",
 					},
-					{ hidden = true, key = "f", action = ":Telescope find_files" },
-					{ hidden = true, key = "l", action = ":Telescope live_grep" },
-					{ hidden = true, key = "o", action = ":Telescope oldfiles" },
+					{
+						hidden = true,
+						key = "f",
+						action = function()
+							Snacks.picker.files()
+						end,
+					},
+					{
+						hidden = true,
+						key = "l",
+						action = function()
+							Snacks.picker.grep()
+						end,
+					},
+					{
+						hidden = true,
+						key = "o",
+						action = function()
+							Snacks.picker.recent()
+						end,
+					},
 					{
 						hidden = true,
 						key = "n",
@@ -139,9 +157,14 @@ return {
 					},
 				},
 			},
-			notifier = { enabled = false },
+			notifier = { enabled = true, timeout = 3000 },
 			scroll = { enabled = false },
-			picker = { enabled = false },
+			picker = {
+				enabled = true,
+				sources = {
+					files = { hidden = true },
+				},
+			},
 			scope = { enabled = false },
 			scratch = { enabled = false },
 			animate = { enabled = false },
@@ -197,14 +220,14 @@ return {
 				desc = "Delete Other Buffers",
 			},
 			{
-				"]]",
+				"]r",
 				function()
 					Snacks.words.jump(vim.v.count1)
 				end,
 				desc = "Next Word Reference",
 			},
 			{
-				"[[",
+				"[r",
 				function()
 					Snacks.words.jump(-vim.v.count1)
 				end,
@@ -213,6 +236,10 @@ return {
 			{
 				"<leader>gg",
 				function()
+					if vim.fn.executable("lazygit") ~= 1 then
+						vim.notify("lazygit is not available in Neovim's PATH. Run :checkhealth dotfiles", vim.log.levels.WARN)
+						return
+					end
 					Snacks.lazygit()
 				end,
 				desc = "LazyGit",
@@ -223,6 +250,174 @@ return {
 					Snacks.terminal.toggle()
 				end,
 				desc = "Toggle Terminal (Split)",
+			},
+			{
+				"<leader><space>",
+				function()
+					Snacks.picker.smart()
+				end,
+				desc = "Smart find files",
+			},
+			{
+				"<leader>:",
+				function()
+					Snacks.picker.command_history()
+				end,
+				desc = "Command history",
+			},
+			{
+				"<leader>b",
+				function()
+					Snacks.picker.buffers()
+				end,
+				desc = "Buffers",
+			},
+			{
+				"<C-p>",
+				function()
+					Snacks.picker.git_files()
+				end,
+				desc = "Search Git files",
+			},
+			{
+				"<leader>ff",
+				function()
+					Snacks.picker.files()
+				end,
+				desc = "Find files",
+			},
+			{
+				"<leader>/",
+				function()
+					Snacks.picker.grep()
+				end,
+				desc = "Live grep",
+			},
+			{
+				"<leader>fb",
+				function()
+					Snacks.picker.buffers()
+				end,
+				desc = "Buffers",
+			},
+			{
+				"<leader>fr",
+				function()
+					Snacks.picker.resume()
+				end,
+				desc = "Resume picker",
+			},
+			{
+				"<leader>gc",
+				function()
+					Snacks.picker.git_log()
+				end,
+				desc = "Git commits",
+			},
+			{
+				"<leader>gs",
+				function()
+					Snacks.picker.git_status()
+				end,
+				desc = "Git status",
+			},
+			{
+				"<leader>sh",
+				function()
+					Snacks.picker.help()
+				end,
+				desc = "Help pages",
+			},
+			{
+				"<leader>sa",
+				function()
+					Snacks.picker.autocmds()
+				end,
+				desc = "Autocommands",
+			},
+			{
+				"<leader>sb",
+				function()
+					Snacks.picker.lines()
+				end,
+				desc = "Buffer lines",
+			},
+			{
+				"<leader>sc",
+				function()
+					Snacks.picker.command_history()
+				end,
+				desc = "Command history",
+			},
+			{
+				"<leader>sC",
+				function()
+					Snacks.picker.commands()
+				end,
+				desc = "Commands",
+			},
+			{
+				"<leader>sD",
+				function()
+					Snacks.picker.diagnostics()
+				end,
+				desc = "Workspace diagnostics",
+			},
+			{
+				"<leader>sd",
+				function()
+					Snacks.picker.diagnostics_buffer()
+				end,
+				desc = "Buffer diagnostics",
+			},
+			{
+				"<leader>sH",
+				function()
+					Snacks.picker.highlights()
+				end,
+				desc = "Highlight groups",
+			},
+			{
+				"<leader>sk",
+				function()
+					Snacks.picker.keymaps()
+				end,
+				desc = "Keymaps",
+			},
+			{
+				"<leader>sM",
+				function()
+					Snacks.picker.man()
+				end,
+				desc = "Man pages",
+			},
+			{
+				"<leader>sm",
+				function()
+					Snacks.picker.marks()
+				end,
+				desc = "Marks",
+			},
+			{
+				"<leader>sR",
+				function()
+					Snacks.picker.resume()
+				end,
+				desc = "Resume picker",
+			},
+			{
+				"<leader>uC",
+				function()
+					Snacks.picker.colorschemes()
+				end,
+				desc = "Colorschemes",
+			},
+			{
+				"<leader>un",
+				function()
+					Snacks.notifier.hide()
+				end,
+				desc = "Dismiss notifications",
 			},
 		},
 	},

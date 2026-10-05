@@ -1,47 +1,14 @@
+local obsidian = require("dotfiles.obsidian")
+
 return {
-	"epwalsh/obsidian.nvim",
+	"obsidian-nvim/obsidian.nvim",
 	version = "*",
-	lazy = true,
-	event = {
-		"BufReadPre ~/Documents/Obsidian/*/*.md",
-		"BufNewFile ~/Documents/Obsidian/*/*.md",
-	},
-	dependencies = {
-		"nvim-lua/plenary.nvim",
-	},
+	ft = "markdown",
+	cmd = "Obsidian",
 	opts = {
-		workspaces = {
-			{
-				name = "Personal",
-				path = "~/Documents/Obsidian/Personal",
-			},
-			{
-				name = "Work",
-				path = "~/Documents/Obsidian/Work",
-			},
-		},
-	},
-	cmd = {
-		"ObsidianOpen",
-		"ObsidianRename",
-		"ObsidianQuickSwitch",
-		"ObsidianNew",
-		"ObsidianSearch",
-		"ObsidianTemplate",
-		"ObsidianToday",
-		"ObsidianTomorrow",
-		"ObsidianYesterday",
-		"ObsidianNewFromTemplate",
-		"ObsidianToggleCheckbox",
-		"ObsidianPasteImg",
-		"ObsidianFollowLink",
-		"ObsidianBacklinks",
-		"ObsidianTags",
-		"ObsidianDailies",
-		"ObsidianLink",
-		"ObsidianLinks",
-		"ObsidianLinkNew",
-		"ObsidianExtractNote",
-		"ObsidianWorkspace",
+		legacy_commands = false,
+		picker = { name = "snacks.picker" },
+		ui = { enable = false },
+		workspaces = obsidian.workspaces,
 	},
 }

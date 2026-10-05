@@ -14,7 +14,6 @@ local disabled_plugins = {
 	"tutor",
 	"zipPlugin",
 	"rplugin",
-	"editorconfig",
 	"matchparen",
 	"matchit",
 }
@@ -37,7 +36,6 @@ local options = {
 	showmode = false,
 	showmatch = true,
 	matchtime = 2,
-	winbar = "%=%m %F",
 	conceallevel = 3,
 	cmdheight = 0,
 	laststatus = 3,
@@ -72,9 +70,9 @@ local options = {
 	joinspaces = false,
 	ttimeoutlen = 10,
 	updatetime = 250,
-	confirm = false,
+	confirm = true,
 	wildmode = "longest:full,full",
-	autochdir = true,
+	autochdir = false,
 
 	undofile = true,
 	shada = "!,'50,<50,s10,h,r/tmp",
@@ -92,9 +90,9 @@ local options = {
 
 	completeopt = "menu,menuone,noselect",
 
-	swapfile = false,
+	swapfile = true,
 	backup = false,
-	writebackup = false,
+	writebackup = true,
 }
 
 for op, val in pairs(options) do
@@ -115,22 +113,9 @@ if vim.fn.executable("prettier") == 1 then
 	vim.opt.formatprg = "prettier --stdin-filepath=%"
 end
 
-local border = "none"
-
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-	border = border,
-	max_width = 80,
-	max_height = 20,
-})
-
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-	border = border,
-	max_width = 80,
-})
-
 vim.diagnostic.config({
 	float = {
-		border = border,
+		border = "none",
 		max_width = 80,
 		source = "always",
 		prefix = " ",
@@ -140,13 +125,6 @@ vim.diagnostic.config({
 		end,
 	},
 })
-
-local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-	opts = opts or {}
-	opts.border = opts.border or border
-	return orig_util_open_floating_preview(contents, syntax, opts, ...)
-end
 
 vim.filetype.add({
 	extension = {

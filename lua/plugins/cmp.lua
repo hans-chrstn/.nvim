@@ -1,13 +1,5 @@
 return {
 	{
-		"onsails/lspkind.nvim",
-		event = "LspAttach",
-		opts = {
-			preset = "default",
-			mode = "symbol_text",
-		},
-	},
-	{
 		"xzbdmw/colorful-menu.nvim",
 		event = "LspAttach",
 		opts = {},
@@ -16,26 +8,15 @@ return {
 		"saghen/blink.cmp",
 		version = "*",
 		event = "InsertEnter",
-		dependencies = {
-			"L3MON4D3/LuaSnip",
-			"rafamadriz/friendly-snippets",
-		},
+		dependencies = { "rafamadriz/friendly-snippets" },
 		opts = {
-			snippets = { preset = "luasnip" },
+			snippets = { preset = "default" },
 			keymap = {
 				preset = "default",
-				["<Tab>"] = {
-					function(cmp)
-						if cmp.snippet_active() then
-							return cmp.accept()
-						else
-							return cmp.select_and_accept()
-						end
-					end,
-					"snippet_forward",
-					"fallback",
-				},
-				["<S-Tab>"] = { "snippet_backward", "fallback" },
+				["<Tab>"] = { "fallback" },
+				["<S-Tab>"] = { "fallback" },
+				["<C-l>"] = { "snippet_forward", "fallback" },
+				["<C-h>"] = { "snippet_backward", "fallback" },
 				["<CR>"] = { "accept", "fallback" },
 				["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
 				["<C-j>"] = { "select_next", "fallback" },
@@ -45,17 +26,9 @@ return {
 				["<C-u>"] = { "scroll_documentation_up", "fallback" },
 				["<C-d>"] = { "scroll_documentation_down", "fallback" },
 			},
-			appearance = {
-				use_nvim_cmp_as_default = true,
-				nerd_font_variant = "mono",
-			},
-
+			appearance = { nerd_font_variant = "mono" },
 			completion = {
-				accept = {
-					auto_brackets = {
-						enabled = true,
-					},
-				},
+				accept = { auto_brackets = { enabled = true } },
 				menu = {
 					auto_show = true,
 					max_height = 15,
@@ -65,11 +38,6 @@ return {
 					draw = {
 						columns = { { "kind_icon" }, { "label", gap = 1 } },
 						components = {
-							kind_icon = {
-								text = function(ctx)
-									return require("lspkind").symbol_map[ctx.kind] or ctx.kind_icon
-								end,
-							},
 							label = {
 								width = { fill = true, max = 60 },
 								text = function(ctx)
@@ -93,22 +61,22 @@ return {
 						winblend = 0,
 					},
 				},
-				ghost_text = {
-					enabled = true,
+				ghost_text = { enabled = true },
+			},
+			sources = {
+				default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+				providers = {
+					lazydev = {
+						name = "LazyDev",
+						module = "lazydev.integrations.blink",
+						score_offset = 100,
+					},
 				},
 			},
-
-			sources = {
-				default = { "lsp", "path", "snippets", "buffer" },
-			},
-
 			cmdline = {
 				enabled = true,
-				completion = {
-					ghost_text = { enabled = true },
-				},
+				completion = { ghost_text = { enabled = true } },
 			},
-
 			signature = {
 				enabled = true,
 				window = {
