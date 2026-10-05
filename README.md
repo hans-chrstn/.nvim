@@ -201,6 +201,7 @@ The leader key is **`<Space>`**.
 
 | Key         | Mode   | Description                            |
 | :---------- | :----- | :------------------------------------- |
+| `<leader>ub` | Normal | Show or hide breadcrumbs               |
 | `<leader>;` | Normal | Pick a path or symbol breadcrumb       |
 | `[;`        | Normal | Go to the start of the current context |
 | `];`        | Normal | Select the next context                |
