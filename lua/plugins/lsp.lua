@@ -165,7 +165,7 @@ return {
 					},
 				},
 				clangd = {
-					cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=never" },
+					cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=iwyu" },
 				},
 				gopls = {},
 				marksman = {

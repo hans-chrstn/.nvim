@@ -1,3 +1,35 @@
+local function has_vulkan_umbrella(bufnr)
+	if not vim.api.nvim_buf_is_valid(bufnr) then
+		return false
+	end
+
+	local last_line = math.min(vim.api.nvim_buf_line_count(bufnr), 500)
+	for _, line in ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, last_line, false)) do
+		local header = line:match('^%s*#%s*include%s*[<"]([^>"]+)[>"]')
+		if header == "vulkan.h" or header == "vulkan/vulkan.h" then
+			return true
+		end
+	end
+
+	return false
+end
+
+local function filter_clangd_includes(ctx, items)
+	if not vim.tbl_contains({ "c", "cpp" }, vim.bo[ctx.bufnr].filetype) or not has_vulkan_umbrella(ctx.bufnr) then
+		return items
+	end
+
+	for _, item in ipairs(items) do
+		if item.client_name == "clangd" and item.additionalTextEdits then
+			item.additionalTextEdits = vim.tbl_filter(function(edit)
+				return not (type(edit.newText) == "string" and edit.newText:find("vulkan_core%.h"))
+			end, item.additionalTextEdits)
+		end
+	end
+
+	return items
+end
+
 return {
 	{
 		"xzbdmw/colorful-menu.nvim",
@@ -66,6 +98,9 @@ return {
 			sources = {
 				default = { "lazydev", "lsp", "path", "snippets", "buffer" },
 				providers = {
+					lsp = {
+						transform_items = filter_clangd_includes,
+					},
 					lazydev = {
 						name = "LazyDev",
 						module = "lazydev.integrations.blink",
