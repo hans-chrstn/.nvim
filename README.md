@@ -199,12 +199,12 @@ The leader key is **`<Space>`**.
 
 ### Breadcrumbs (dropbar.nvim)
 
-| Key         | Mode   | Description                            |
-| :---------- | :----- | :------------------------------------- |
+| Key          | Mode   | Description                            |
+| :----------- | :----- | :------------------------------------- |
 | `<leader>ub` | Normal | Show or hide breadcrumbs               |
-| `<leader>;` | Normal | Pick a path or symbol breadcrumb       |
-| `[;`        | Normal | Go to the start of the current context |
-| `];`        | Normal | Select the next context                |
+| `<leader>;`  | Normal | Pick a path or symbol breadcrumb       |
+| `[;`         | Normal | Go to the start of the current context |
+| `];`         | Normal | Select the next context                |
 
 ### Build & Run Tasks (overseer.nvim)
 
@@ -215,7 +215,7 @@ The leader key is **`<Space>`**.
 | `<leader>oa` | Normal | Select an action for a task  |
 | `<leader>ol` | Normal | Restart the most recent task |
 
-### 💻 Terminal (snacks.nvim)
+### Terminal (snacks.nvim)
 
 | Key          | Mode                 | Description                |
 | :----------- | :------------------- | :------------------------- |

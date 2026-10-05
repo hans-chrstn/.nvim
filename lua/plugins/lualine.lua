@@ -1,9 +1,25 @@
 local buffer_mode = 1
 
+local function transparent_theme()
+	local theme = require("lualine.themes.auto")
+
+	for _, mode in pairs(theme) do
+		for section_name, section in pairs(mode) do
+			if section_name == "a" and section.bg and section.bg ~= "NONE" then
+				section.fg = section.bg
+			end
+			section.bg = "NONE"
+		end
+	end
+
+	return theme
+end
+
 local function setup_lualine()
 	require("lualine").setup({
 		options = {
 			globalstatus = true,
+			theme = transparent_theme(),
 		},
 		sections = {
 			lualine_c = {
