@@ -10,7 +10,7 @@ return {
 	opts = {
 		width = 120,
 		height = 20,
-		border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+		border = "rounded",
 		default_mappings = false,
 		focus_on_open = true,
 		dismiss_on_move = false,

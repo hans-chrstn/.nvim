@@ -40,6 +40,8 @@ local options = {
 	cmdheight = 0,
 	laststatus = 3,
 	showtabline = 0,
+	winborder = "rounded",
+	pumborder = "rounded",
 	list = false,
 	smoothscroll = true,
 
@@ -115,7 +117,7 @@ end
 
 vim.diagnostic.config({
 	float = {
-		border = "none",
+		border = "rounded",
 		max_width = 80,
 		source = "always",
 		prefix = " ",

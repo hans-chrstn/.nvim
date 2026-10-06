@@ -4,6 +4,14 @@ return {
 		priority = 1000,
 		lazy = false,
 		opts = {
+			styles = {
+				terminal = {
+					wo = {
+						winhighlight = "Normal:Normal,NormalNC:NormalNC,NormalFloat:Normal",
+						winbar = "",
+					},
+				},
+			},
 			bigfile = {
 				enabled = true,
 				notify = true,
@@ -30,7 +38,7 @@ return {
 			bufdelete = { enabled = true },
 			indent = { enabled = true },
 			input = { enabled = true },
-			explorer = { enabled = false, trash = false },
+			explorer = { enabled = true, trash = true },
 			zen = {
 				enabled = true,
 				toggles = {
@@ -163,6 +171,28 @@ return {
 				enabled = true,
 				sources = {
 					files = { hidden = true },
+					explorer = {
+						follow_file = false,
+						layout = { preset = "sidebar", preview = false },
+						win = {
+							list = {
+								wo = {
+									winhighlight = table.concat({
+										"Normal:Normal",
+										"NormalNC:NormalNC",
+										"NormalFloat:Normal",
+										"FloatBorder:FloatBorder",
+										"FloatTitle:FloatTitle",
+										"FloatFooter:FloatFooter",
+										"CursorLine:SnacksPickerListCursorLine",
+									}, ","),
+								},
+								keys = {
+									e = "toggle_maximize",
+								},
+							},
+						},
+					},
 				},
 			},
 			scope = { enabled = false },
@@ -170,6 +200,13 @@ return {
 			animate = { enabled = false },
 		},
 		keys = {
+			{
+				"<leader>e",
+				function()
+					Snacks.explorer()
+				end,
+				desc = "Open Snacks Explorer",
+			},
 			{
 				"<leader>z",
 				function()

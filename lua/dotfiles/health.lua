@@ -59,7 +59,6 @@ local sections = {
 	{
 		name = "Optional integrations",
 		tools = {
-			{ "yazi", "file manager" },
 			{ "lazygit", "Git interface" },
 			{ "fzf", "native quickfix filtering" },
 			{ "mmdc", "Mermaid rendering" },

@@ -8,7 +8,7 @@ return {
 	opts = {
 		auto_resize_height = true,
 		preview = {
-			border = "none",
+			border = "rounded",
 			winblend = 0,
 			delay_syntax = 80,
 		},

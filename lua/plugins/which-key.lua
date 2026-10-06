@@ -10,7 +10,7 @@ return {
 				group = "+",
 			},
 			win = {
-				border = "none",
+				border = "rounded",
 			},
 		},
 		config = function(_, opts)

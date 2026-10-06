@@ -31,7 +31,7 @@ return {
 				update_in_insert = false,
 				severity_sort = true,
 				float = {
-					border = "none",
+					border = "rounded",
 					source = "always",
 					header = "Diagnostics:",
 					prefix = "  ",
@@ -77,10 +77,10 @@ return {
 					map({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
 					map("n", "<leader>cr", vim.lsp.buf.rename, "Rename symbol")
 					map("n", "K", function()
-						vim.lsp.buf.hover({ border = "none", max_width = 80, max_height = 20 })
+						vim.lsp.buf.hover({ border = "rounded", max_width = 80, max_height = 20 })
 					end, "Hover documentation")
 					map("n", "gK", function()
-						vim.lsp.buf.signature_help({ border = "none", max_width = 80 })
+						vim.lsp.buf.signature_help({ border = "rounded", max_width = 80 })
 					end, "Signature help")
 					map("n", "[d", function()
 						vim.diagnostic.jump({ count = -1, float = true })

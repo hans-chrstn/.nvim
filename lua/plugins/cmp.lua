@@ -64,7 +64,7 @@ return {
 				menu = {
 					auto_show = true,
 					max_height = 15,
-					border = "none",
+					border = "rounded",
 					scrollbar = true,
 					winblend = 0,
 					draw = {
@@ -88,7 +88,7 @@ return {
 					window = {
 						max_height = 20,
 						max_width = 80,
-						border = "none",
+						border = "rounded",
 						scrollbar = true,
 						winblend = 0,
 					},
@@ -115,7 +115,7 @@ return {
 			signature = {
 				enabled = true,
 				window = {
-					border = "none",
+					border = "rounded",
 					max_height = 10,
 					max_width = 80,
 					scrollbar = true,

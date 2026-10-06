@@ -9,7 +9,7 @@ return {
 				preview = {
 					type = "float",
 					relative = "editor",
-					border = "none",
+					border = "rounded",
 					title = "Preview",
 					title_pos = "center",
 					position = { 0, -2 },

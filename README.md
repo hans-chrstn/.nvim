@@ -274,9 +274,7 @@ The leader key is **`<Space>`**.
 
 | Key          | Mode   | Description                                  |
 | :----------- | :----- | :------------------------------------------- |
-| `<leader>e`  | Normal | Open yazi at the current file                |
-| `<leader>cw` | Normal | Open yazi at the current working directory   |
-| `<c-up>`     | Normal | Resume the last yazi session                 |
+| `<leader>e`  | Normal | Open Snacks Explorer                         |
 | `<leader>qs` | Normal | Restore Session (persistence)                |
 | `<leader>ql` | Normal | Restore Last Session (persistence)           |
 | `<leader>qd` | Normal | Don't Save Current Session (persistence)     |
@@ -292,17 +290,15 @@ The leader key is **`<Space>`**.
 | `<leader>Ct` | Normal | Toggle Discord Presence (cord, when enabled) |
 | `<leader>Ci` | Normal | Toggle Idle Status (cord, when enabled)      |
 
-#### Inside Yazi
+#### Inside Snacks Explorer
 
-| Key       | Description                                                   |
-| :-------- | :------------------------------------------------------------ |
-| `<Enter>` | Open file in the current window                               |
-| `<C-v>`   | Open file in a vertical split                                 |
-| `<C-x>`   | Open file in a horizontal split                               |
-| `<C-t>`   | Open file in a new Neovim tab page                            |
-| `<Tab>`   | Move Yazi to the file shown in the next visible Neovim window |
-| `<C-o>`   | Choose a window and open the file there                       |
-| `<C-y>`   | Copy selected relative paths                                  |
-| `<C-q>`   | Send selected files to quickfix                               |
-| `<C-\>`   | Change Neovim's working directory                             |
-| `<F1>`    | Show Yazi keymap help                                         |
+| Key       | Description                             |
+| :-------- | :-------------------------------------- |
+| `<Enter>` | Open in the current window              |
+| `<C-s>`   | Open in a horizontal split              |
+| `<C-v>`   | Open in a vertical split                |
+| `<C-t>`   | Open in a new tab page                  |
+| `e`       | Toggle compact/expanded explorer layout |
+| `a`       | Add a file or directory                 |
+| `r`       | Rename the current file or directory    |
+| `d`       | Move selected files to the system trash |
