@@ -48,7 +48,7 @@ The leader key is **`<Space>`**.
 | :------------ | :------------- | :------------------------------------------ |
 | `<leader>dd`  | Normal         | Open diagnostics float                      |
 | `<leader>ch`  | Normal         | Check config dependencies                   |
-| `<leader>ca`  | Normal, Visual | Code Action                                 |
+| `<leader>ca`  | Normal, Visual | Code Action with Preview                    |
 | `<leader>cr`  | Normal         | Rename Symbol                               |
 | `gd`          | Normal         | Go to Definition                            |
 | `gD`          | Normal         | Go to Declaration                           |
@@ -70,6 +70,8 @@ The leader key is **`<Space>`**.
 | `<leader>xx`  | Normal         | Toggle Diagnostics (Trouble)                |
 | `<leader>xX`  | Normal         | Toggle Buffer Diagnostics (Trouble)         |
 | `<leader>cs`  | Normal         | Toggle Symbols (Trouble)                    |
+| `<leader>co`  | Normal         | Toggle Code Outline (Aerial)                |
+| `<leader>cu`  | Normal         | Toggle Symbol Usage Annotations             |
 | `<leader>cl`  | Normal         | Toggle LSP Definitions/References (Trouble) |
 | `<leader>xL`  | Normal         | Toggle Location List (Trouble)              |
 | `<leader>xQ`  | Normal         | Toggle Quickfix List (Trouble)              |
@@ -79,17 +81,20 @@ The leader key is **`<Space>`**.
 
 ### Debugging (nvim-dap)
 
-| Key                   | Mode   | Description                 |
-| :-------------------- | :----- | :-------------------------- |
-| `<F5>` / `<leader>dc` | Normal | Start or continue debugging |
-| `<F10>`               | Normal | Step over                   |
-| `<F11>`               | Normal | Step into                   |
-| `<F12>`               | Normal | Step out                    |
-| `<leader>db`          | Normal | Toggle breakpoint           |
-| `<leader>dB`          | Normal | Set conditional breakpoint  |
-| `<leader>dl`          | Normal | Set log point               |
-| `<leader>dr`          | Normal | Toggle debug REPL           |
-| `<leader>dt`          | Normal | Terminate debugging         |
+| Key                   | Mode           | Description                 |
+| :-------------------- | :------------- | :-------------------------- |
+| `<F5>` / `<leader>dc` | Normal         | Start or continue debugging |
+| `<F10>`               | Normal         | Step over                   |
+| `<F11>`               | Normal         | Step into                   |
+| `<F12>`               | Normal         | Step out                    |
+| `<leader>db`          | Normal         | Toggle breakpoint           |
+| `<leader>dB`          | Normal         | Set conditional breakpoint  |
+| `<leader>dl`          | Normal         | Set log point               |
+| `<leader>dr`          | Normal         | Toggle debug REPL           |
+| `<leader>dt`          | Normal         | Terminate debugging         |
+| `<leader>du`          | Normal         | Toggle Debug UI             |
+| `<leader>dh`          | Normal, Visual | Inspect Expression          |
+| `<leader>dw`          | Normal, Visual | Watch Expression            |
 
 ### Editing & Text
 
@@ -99,6 +104,7 @@ The leader key is **`<Space>`**.
 | `<leader>cg` | Normal         | Generate annotation (Neogen)         |
 | `<leader>uf` | Normal         | Toggle Format Globally (conform)     |
 | `<leader>uF` | Normal         | Toggle Format Locally (conform)      |
+| `<leader>ug` | Normal         | Toggle Text Animations               |
 | `gc`         | Normal, Visual | Comment with an operator             |
 | `gcc`        | Normal         | Comment the current line             |
 | `]t`         | Normal         | Jump to Next Todo Comment            |

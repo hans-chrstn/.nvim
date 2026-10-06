@@ -8,6 +8,23 @@ end
 
 return {
 	"mfussenegger/nvim-dap",
+	dependencies = {
+		{
+			"igorlfs/nvim-dap-view",
+			opts = {
+				auto_toggle = true,
+				follow_tab = true,
+				windows = {
+					size = 0.25,
+					position = "below",
+				},
+				virtual_text = {
+					enabled = true,
+					position = "inline",
+				},
+			},
+		},
+	},
 	cmd = {
 		"DapContinue",
 		"DapNew",
@@ -90,6 +107,23 @@ return {
 				require("dap").terminate()
 			end,
 			desc = "Terminate debugging",
+		},
+		{
+			"<leader>du",
+			"<cmd>DapViewToggle<cr>",
+			desc = "Toggle debug UI",
+		},
+		{
+			"<leader>dh",
+			":DapViewHover<cr>",
+			mode = { "n", "x" },
+			desc = "Inspect expression",
+		},
+		{
+			"<leader>dw",
+			":DapViewWatch<cr>",
+			mode = { "n", "x" },
+			desc = "Watch expression",
 		},
 	},
 	config = function()

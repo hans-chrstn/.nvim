@@ -16,9 +16,27 @@ return {
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 			local health = require("dotfiles.health")
 			local obsidian = require("dotfiles.obsidian")
+			local function clangd_cmd()
+				local cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=iwyu" }
+				if not health.has("gcc") and not health.has("g++") then
+					return cmd
+				end
+
+				local drivers = {}
+				for _, executable in ipairs({ "gcc", "g++", "cc", "c++" }) do
+					local path = vim.fn.exepath(executable)
+					if path ~= "" and not vim.list_contains(drivers, path) then
+						drivers[#drivers + 1] = path
+					end
+				end
+				if #drivers > 0 then
+					cmd[#cmd + 1] = "--query-driver=" .. table.concat(drivers, ",")
+				end
+				return cmd
+			end
 
 			vim.diagnostic.config({
-				virtual_text = { spacing = 4, prefix = "●" },
+				virtual_text = false,
 				signs = {
 					text = {
 						[vim.diagnostic.severity.ERROR] = "✘",
@@ -74,7 +92,9 @@ return {
 					map("n", "gr", function()
 						Snacks.picker.lsp_references()
 					end, "References")
-					map({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
+					map({ "n", "x" }, "<leader>ca", function()
+						require("tiny-code-action").code_action()
+					end, "Code action with preview")
 					map("n", "<leader>cr", vim.lsp.buf.rename, "Rename symbol")
 					map("n", "K", function()
 						vim.lsp.buf.hover({ border = "rounded", max_width = 80, max_height = 20 })
@@ -165,7 +185,7 @@ return {
 					},
 				},
 				clangd = {
-					cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=iwyu" },
+					cmd = clangd_cmd(),
 				},
 				gopls = {},
 				marksman = {
