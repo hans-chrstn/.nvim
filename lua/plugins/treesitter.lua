@@ -63,6 +63,35 @@ return {
 		end,
 		config = function()
 			require("nvim-treesitter").setup({})
+			local pending = {}
+			local ready = vim.g.did_very_lazy == true
+
+			local function start(bufnr, filetype, lang)
+				vim.schedule(function()
+					if not vim.api.nvim_buf_is_valid(bufnr) or vim.bo[bufnr].filetype ~= filetype then
+						return
+					end
+					if pcall(vim.treesitter.start, bufnr, lang) then
+						vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+						for _, winid in ipairs(vim.fn.win_findbuf(bufnr)) do
+							vim.wo[winid].foldmethod = "expr"
+							vim.wo[winid].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+						end
+					end
+				end)
+			end
+
+			local function flush_pending()
+				if ready then
+					return
+				end
+				ready = true
+				local queued = pending
+				pending = {}
+				for bufnr, item in pairs(queued) do
+					start(bufnr, item.filetype, item.lang)
+				end
+			end
 
 			vim.api.nvim_create_autocmd("FileType", {
 				group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true }),
@@ -72,18 +101,28 @@ return {
 					local filetype = vim.bo[bufnr].filetype
 					local lang = filetype_languages[filetype]
 
-					vim.schedule(function()
-						if not vim.api.nvim_buf_is_valid(bufnr) or vim.bo[bufnr].filetype ~= filetype then
-							return
-						end
-						if pcall(vim.treesitter.start, bufnr, lang) then
-							vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-							for _, winid in ipairs(vim.fn.win_findbuf(bufnr)) do
-								vim.wo[winid].foldmethod = "expr"
-								vim.wo[winid].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-							end
-						end
-					end)
+					if ready then
+						start(bufnr, filetype, lang)
+					else
+						pending[bufnr] = { filetype = filetype, lang = lang }
+					end
+				end,
+			})
+
+			vim.api.nvim_create_autocmd("User", {
+				group = "UserTreesitter",
+				pattern = "VeryLazy",
+				once = true,
+				callback = flush_pending,
+			})
+
+			vim.api.nvim_create_autocmd("VimEnter", {
+				group = "UserTreesitter",
+				once = true,
+				callback = function()
+					if #vim.api.nvim_list_uis() == 0 then
+						flush_pending()
+					end
 				end,
 			})
 
@@ -160,7 +199,7 @@ return {
 
 	{
 		"nvim-treesitter/nvim-treesitter-context",
-		event = { "BufReadPost", "BufNewFile" },
+		event = "VeryLazy",
 		opts = { enable = true },
 	},
 

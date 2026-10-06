@@ -23,7 +23,8 @@ return {
 					end)
 				end,
 			},
-			quickfile = { enabled = true },
+			-- Initial Tree-sitter parsing is deferred until after the first screen.
+			quickfile = { enabled = false },
 			words = {
 				enabled = true,
 				debounce = 100,
@@ -36,7 +37,7 @@ return {
 			terminal = { enabled = true },
 			rename = { enabled = true },
 			bufdelete = { enabled = true },
-			indent = { enabled = true },
+			indent = { enabled = false },
 			input = { enabled = true },
 			explorer = { enabled = true, trash = true },
 			zen = {
@@ -199,6 +200,15 @@ return {
 			scratch = { enabled = false },
 			animate = { enabled = false },
 		},
+		init = function()
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "VeryLazy",
+				once = true,
+				callback = function()
+					require("snacks.indent").enable()
+				end,
+			})
+		end,
 		keys = {
 			{
 				"<leader>e",
