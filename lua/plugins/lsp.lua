@@ -207,7 +207,7 @@ return {
 				pyright = "pyright-langserver",
 				rust_analyzer = "rust-analyzer",
 				ts_ls = "typescript-language-server",
-				jdtls = "jdtls",
+				java_language_server = "java-language-server",
 				lua_ls = "lua-language-server",
 				nixd = "nixd",
 				clangd = "clangd",

@@ -27,7 +27,7 @@ local sections = {
 			{ "pyright-langserver", "Python" },
 			{ "rust-analyzer", "Rust" },
 			{ "typescript-language-server", "JavaScript and TypeScript" },
-			{ "jdtls", "Java" },
+			{ "java-language-server", "Java" },
 			{ "nixd", "Nix" },
 			{ "gopls", "Go" },
 			{ "marksman", "Markdown" },
@@ -69,7 +69,7 @@ local sections = {
 }
 
 function M.has(command)
-	return vim.fn.executable(command) == 1
+	return type(command) == "string" and command ~= "" and vim.fn.executable(command) == 1
 end
 
 function M.missing(commands)
