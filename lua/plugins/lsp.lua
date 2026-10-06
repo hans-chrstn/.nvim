@@ -159,7 +159,6 @@ return {
 					},
 				},
 				ts_ls = {},
-				jdtls = {},
 				lua_ls = {
 					settings = {
 						Lua = {
@@ -186,6 +185,13 @@ return {
 				},
 				clangd = {
 					cmd = clangd_cmd(),
+				},
+				java_language_server = {
+					root_dir = function(bufnr, on_dir)
+						local path = vim.api.nvim_buf_get_name(bufnr)
+						local marker = vim.fs.root(path, { "build.gradle", "build.gradle.kts", "pom.xml", ".git" })
+						on_dir(marker or vim.fs.dirname(path))
+					end,
 				},
 				gopls = {},
 				marksman = {
