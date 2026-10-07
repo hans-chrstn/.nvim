@@ -21,6 +21,10 @@ The leader key is **`<Space>`**.
 | `<leader>wc` | Normal | Close current window      |
 | `<leader>wo` | Normal | Close other windows       |
 | `<leader>w=` | Normal | Equalize window sizes     |
+| `<C-Left>`   | Normal | Resize focused window left  |
+| `<C-Down>`   | Normal | Resize focused window down  |
+| `<C-Up>`     | Normal | Resize focused window up    |
+| `<C-Right>`  | Normal | Resize focused window right |
 
 ### Buffers (lualine.nvim)
 
@@ -106,12 +110,15 @@ The leader key is **`<Space>`**.
 | `<leader>uf` | Normal         | Toggle Format Globally (conform)     |
 | `<leader>uF` | Normal         | Toggle Format Locally (conform)      |
 | `<leader>ug` | Normal         | Toggle Text Animations               |
+| `<leader>uk` | Normal         | Toggle pressed-key display            |
 | `<leader>cj` | Normal         | Join or split the syntax node         |
 | `<leader>cJ` | Normal         | Recursively split the syntax node     |
+| `<leader>cS` | Visual         | Copy a styled code snapshot           |
 | `<C-a>`      | Normal, Visual | Increment a number, date, or value    |
 | `<C-x>`      | Normal, Visual | Decrement a number, date, or value    |
 | `]y` / `[y`  | Normal         | Cycle forward/backward through yanks  |
 | `]p` / `[p`  | Normal         | Put after/before with matching indent |
+| `<M-h/j/k/l>` | Normal, Visual | Move current line or selection       |
 | `gc`         | Normal, Visual | Comment with an operator             |
 | `gcc`        | Normal         | Comment the current line             |
 | `]t`         | Normal         | Jump to Next Todo Comment            |
@@ -147,7 +154,7 @@ The leader key is **`<Space>`**.
 | `<leader>a` | Normal | Swap next parameter     |
 | `<leader>A` | Normal | Swap previous parameter |
 
-#### Folding (Treesitter)
+#### Folding (Origami with LSP/Tree-sitter fallback)
 
 | Key         | Mode   | Description                   |
 | :---------- | :----- | :---------------------------- |

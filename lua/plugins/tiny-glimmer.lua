@@ -13,7 +13,16 @@ return {
 			auto_map = true,
 			yank = {
 				enabled = true,
-				default_animation = "fade",
+				default_animation = {
+					name = "fade",
+					settings = {
+						min_duration = 60,
+						max_duration = 100,
+						chars_for_max_duration = 20,
+						from_color = "Visual",
+						to_color = "Normal",
+					},
+				},
 			},
 			search = {
 				enabled = true,

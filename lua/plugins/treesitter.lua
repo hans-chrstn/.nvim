@@ -73,10 +73,6 @@ return {
 					end
 					if pcall(vim.treesitter.start, bufnr, lang) then
 						vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-						for _, winid in ipairs(vim.fn.win_findbuf(bufnr)) do
-							vim.wo[winid].foldmethod = "expr"
-							vim.wo[winid].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-						end
 					end
 				end)
 			end
@@ -125,8 +121,6 @@ return {
 					end
 				end,
 			})
-
-			vim.opt.foldenable = false
 		end,
 	},
 

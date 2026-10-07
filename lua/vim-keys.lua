@@ -4,11 +4,6 @@ vim.keymap.set("n", "<leader>dd", function()
 end, { silent = true, desc = "Open diagnostics float" })
 vim.keymap.set("n", "<leader>ch", "<cmd>checkhealth dotfiles<cr>", { desc = "Check config dependencies" })
 
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Focus window left" })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Focus window below" })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Focus window above" })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Focus window right" })
-
 vim.keymap.set("n", "<leader>wv", "<cmd>vsplit<cr>", { desc = "Split window vertically" })
 vim.keymap.set("n", "<leader>ws", "<cmd>split<cr>", { desc = "Split window horizontally" })
 vim.keymap.set("n", "<leader>wc", "<cmd>close<cr>", { desc = "Close current window" })
