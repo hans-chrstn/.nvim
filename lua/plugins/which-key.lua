@@ -30,6 +30,8 @@ return {
 				{ "<leader>gx", group = "conflicts" },
 				{ "<leader>o", group = "tasks" },
 				{ "<leader>q", group = "quit/session" },
+				{ "<leader>r", group = "run/tests" },
+				{ "<leader>s", group = "search/history" },
 				{ "<leader>t", group = "toggle/terminal" },
 				{ "<leader>u", group = "ui" },
 				{ "<leader>w", group = "window" },

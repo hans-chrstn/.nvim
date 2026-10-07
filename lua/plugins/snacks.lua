@@ -197,7 +197,7 @@ return {
 				},
 			},
 			scope = { enabled = false },
-			scratch = { enabled = false },
+			scratch = { enabled = true },
 			animate = { enabled = false },
 		},
 		init = function()
@@ -210,6 +210,27 @@ return {
 			})
 		end,
 		keys = {
+			{
+				"<leader>ss",
+				function()
+					Snacks.scratch()
+				end,
+				desc = "Open scratch buffer",
+			},
+			{
+				"<leader>sS",
+				function()
+					Snacks.scratch.select()
+				end,
+				desc = "Select scratch buffer",
+			},
+			{
+				"<leader>su",
+				function()
+					Snacks.picker.undo()
+				end,
+				desc = "Undo history",
+			},
 			{
 				"<leader>e",
 				function()

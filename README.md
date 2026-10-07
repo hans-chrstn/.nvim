@@ -75,7 +75,8 @@ The leader key is **`<Space>`**.
 | `<leader>cl`  | Normal         | Toggle LSP Definitions/References (Trouble) |
 | `<leader>xL`  | Normal         | Toggle Location List (Trouble)              |
 | `<leader>xQ`  | Normal         | Toggle Quickfix List (Trouble)              |
-| `<leader>xq`  | Normal         | Open native quickfix (nvim-bqf)             |
+| `<leader>xq`  | Normal         | Toggle editable quickfix list               |
+| `<leader>xl`  | Normal         | Toggle editable location list               |
 | `<leader>xt`  | Normal         | Toggle Todo (Trouble)                       |
 | `<leader>xT`  | Normal         | Toggle Todo/Fix/Fixme (Trouble)             |
 
@@ -105,6 +106,12 @@ The leader key is **`<Space>`**.
 | `<leader>uf` | Normal         | Toggle Format Globally (conform)     |
 | `<leader>uF` | Normal         | Toggle Format Locally (conform)      |
 | `<leader>ug` | Normal         | Toggle Text Animations               |
+| `<leader>cj` | Normal         | Join or split the syntax node         |
+| `<leader>cJ` | Normal         | Recursively split the syntax node     |
+| `<C-a>`      | Normal, Visual | Increment a number, date, or value    |
+| `<C-x>`      | Normal, Visual | Decrement a number, date, or value    |
+| `]y` / `[y`  | Normal         | Cycle forward/backward through yanks  |
+| `]p` / `[p`  | Normal         | Put after/before with matching indent |
 | `gc`         | Normal, Visual | Comment with an operator             |
 | `gcc`        | Normal         | Comment the current line             |
 | `]t`         | Normal         | Jump to Next Todo Comment            |
@@ -159,6 +166,7 @@ The leader key is **`<Space>`**.
 | `*` / `#`         | Normal | Search forward / backward for word |
 | `zz`              | Normal | Center the current line            |
 | `gv`              | Normal | Reselect the last visual selection |
+| `w` / `e` / `b` / `ge` | Normal, Visual, Operator | Move by subword boundaries |
 
 #### nvim-surround
 
@@ -178,30 +186,35 @@ The leader key is **`<Space>`**.
 
 ### Search (snacks.nvim)
 
-| Key               | Mode   | Description             |
-| :---------------- | :----- | :---------------------- |
-| `<leader><space>` | Normal | Smart Find Files        |
-| `<leader>:`       | Normal | Command History         |
-| `<leader>b`       | Normal | Buffers                 |
-| `<C-p>`           | Normal | Search Git Files        |
-| `<leader>ff`      | Normal | Find Files              |
-| `<leader>/`       | Normal | Live Grep               |
-| `<leader>fb`      | Normal | Buffers                 |
-| `<leader>fr`      | Normal | Resume Picker           |
-| `<leader>sh`      | Normal | Help Pages              |
-| `<leader>sa`      | Normal | Auto Commands           |
-| `<leader>sb`      | Normal | Buffer Lines            |
-| `<leader>sc`      | Normal | Command History         |
-| `<leader>sC`      | Normal | Commands                |
-| `<leader>sD`      | Normal | Workspace Diagnostics   |
-| `<leader>sd`      | Normal | Buffer Diagnostics      |
-| `<leader>sH`      | Normal | Search Highlight Groups |
-| `<leader>sk`      | Normal | Keymaps                 |
-| `<leader>sM`      | Normal | Man Pages               |
-| `<leader>sm`      | Normal | Jump to Mark            |
-| `<leader>sR`      | Normal | Resume Picker           |
-| `<leader>st`      | Normal | Search Todo Comments    |
-| `<leader>uC`      | Normal | Colorscheme Preview     |
+| Key               | Mode           | Description                 |
+| :---------------- | :------------- | :-------------------------- |
+| `<leader><space>` | Normal         | Smart Find Files            |
+| `<leader>:`       | Normal         | Command History             |
+| `<leader>b`       | Normal         | Buffers                     |
+| `<C-p>`           | Normal         | Search Git Files            |
+| `<leader>ff`      | Normal         | Find Files                  |
+| `<leader>/`       | Normal         | Live Grep                   |
+| `<leader>fb`      | Normal         | Buffers                     |
+| `<leader>fr`      | Normal         | Resume Picker               |
+| `<leader>sh`      | Normal         | Help Pages                  |
+| `<leader>sa`      | Normal         | Auto Commands               |
+| `<leader>sb`      | Normal         | Buffer Lines                |
+| `<leader>sc`      | Normal         | Command History             |
+| `<leader>sC`      | Normal         | Commands                    |
+| `<leader>sD`      | Normal         | Workspace Diagnostics       |
+| `<leader>sd`      | Normal         | Buffer Diagnostics          |
+| `<leader>sH`      | Normal         | Search Highlight Groups     |
+| `<leader>sk`      | Normal         | Keymaps                     |
+| `<leader>sM`      | Normal         | Man Pages                   |
+| `<leader>sm`      | Normal         | Jump to Mark                |
+| `<leader>sr`      | Normal, Visual | Search and replace project  |
+| `<leader>sR`      | Normal         | Resume Picker               |
+| `<leader>ss`      | Normal         | Open a persistent scratch   |
+| `<leader>sS`      | Normal         | Select a scratch buffer     |
+| `<leader>st`      | Normal         | Search Todo Comments        |
+| `<leader>su`      | Normal         | Browse undo history         |
+| `<leader>sy`      | Normal         | Browse yank history         |
+| `<leader>uC`      | Normal         | Colorscheme Preview         |
 
 ### Breadcrumbs (dropbar.nvim)
 
@@ -220,6 +233,20 @@ The leader key is **`<Space>`**.
 | `<leader>ot` | Normal | Toggle the task list         |
 | `<leader>oa` | Normal | Select an action for a task  |
 | `<leader>ol` | Normal | Restart the most recent task |
+
+### Tests (neotest + CTest)
+
+| Key          | Mode   | Description                  |
+| :----------- | :----- | :--------------------------- |
+| `<leader>rr` | Normal | Run nearest test             |
+| `<leader>rf` | Normal | Run tests in current file    |
+| `<leader>ra` | Normal | Run all tests in project     |
+| `<leader>rl` | Normal | Run the last test again      |
+| `<leader>rd` | Normal | Debug nearest test           |
+| `<leader>rs` | Normal | Toggle test summary          |
+| `<leader>ro` | Normal | Show nearest test output     |
+| `<leader>rp` | Normal | Toggle test output panel     |
+| `<leader>rx` | Normal | Stop the running test        |
 
 ### Terminal (snacks.nvim)
 
@@ -265,6 +292,10 @@ The leader key is **`<Space>`**.
 | `<leader>gg`  | Normal         | LazyGit (snacks)                        |
 | `<leader>gc`  | Normal         | Git Commits (snacks picker)             |
 | `<leader>gs`  | Normal         | Git Status (snacks picker)              |
+| `<leader>gd`  | Normal         | Open Diffview                           |
+| `<leader>gD`  | Normal         | Close Diffview                          |
+| `<leader>gF`  | Normal         | Current file history (Diffview)         |
+| `<leader>gH`  | Normal         | Repository history (Diffview)           |
 | `<leader>gxl` | Normal         | List merge conflicts in quickfix        |
 
 | Key  | Mode           | Description               |
