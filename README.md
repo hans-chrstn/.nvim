@@ -48,6 +48,8 @@ The leader key is **`<Space>`**.
 
 ### LSP & Diagnostics
 
+Language-server completion, diagnostics, hover, symbols, and signature help are enabled for C/C++, GLSL, Slang/HLSL, CMake, Lua, Python, Rust, TypeScript, Java, Nix, Go, and Markdown when their executables are available.
+
 | Key           | Mode           | Description                                 |
 | :------------ | :------------- | :------------------------------------------ |
 | `<leader>dd`  | Normal         | Open diagnostics float                      |

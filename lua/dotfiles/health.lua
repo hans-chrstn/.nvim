@@ -31,6 +31,9 @@ local sections = {
 			{ "nixd", "Nix" },
 			{ "gopls", "Go" },
 			{ "marksman", "Markdown" },
+			{ "glsl_analyzer", "GLSL shaders" },
+			{ "slangd", "Slang and HLSL shaders" },
+			{ "neocmakelsp", "CMake" },
 		},
 	},
 	{

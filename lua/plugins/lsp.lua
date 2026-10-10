@@ -186,6 +186,18 @@ return {
 				clangd = {
 					cmd = clangd_cmd(),
 				},
+				glsl_analyzer = {},
+				slangd = {
+					settings = {
+						slang = {
+							inlayHints = {
+								deducedTypes = true,
+								parameterNames = true,
+							},
+						},
+					},
+				},
+				neocmake = {},
 				java_language_server = {
 					root_dir = function(bufnr, on_dir)
 						local path = vim.api.nvim_buf_get_name(bufnr)
@@ -211,6 +223,9 @@ return {
 				lua_ls = "lua-language-server",
 				nixd = "nixd",
 				clangd = "clangd",
+				glsl_analyzer = "glsl_analyzer",
+				slangd = "slangd",
+				neocmake = "neocmakelsp",
 				gopls = "gopls",
 				marksman = "marksman",
 			}
