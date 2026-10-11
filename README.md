@@ -50,6 +50,8 @@ The leader key is **`<Space>`**.
 
 Language-server completion, diagnostics, hover, symbols, and signature help are enabled for C/C++, GLSL, Slang/HLSL, CMake, Lua, Python, Rust, TypeScript, Java, Nix, Go, and Markdown when their executables are available.
 
+Language servers are resolved from the current environment first. When a server is missing and Nix is available, Neovim launches it with `nix shell nixpkgs#<package> --command <server>`. Project flakes are never evaluated automatically, and downloaded packages remain cached in the normal Nix store.
+
 | Key           | Mode           | Description                                 |
 | :------------ | :------------- | :------------------------------------------ |
 | `<leader>dd`  | Normal         | Open diagnostics float                      |

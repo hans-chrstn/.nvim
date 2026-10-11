@@ -1,4 +1,5 @@
 local M = {}
+local nix_lsp = require("dotfiles.nix_lsp")
 
 local sections = {
 	{
@@ -13,7 +14,7 @@ local sections = {
 	{
 		name = "C and C++",
 		tools = {
-			{ "clangd", "language server", true },
+			{ "clangd", "language server", true, "clangd" },
 			{ "clang-format", "formatting and indentation settings", true },
 			{ "codelldb", "debug adapter" },
 			{ "cc", "C compiler" },
@@ -23,17 +24,17 @@ local sections = {
 	{
 		name = "Language servers",
 		tools = {
-			{ "lua-language-server", "Lua" },
-			{ "pyright-langserver", "Python" },
-			{ "rust-analyzer", "Rust" },
-			{ "typescript-language-server", "JavaScript and TypeScript" },
-			{ "java-language-server", "Java" },
-			{ "nixd", "Nix" },
-			{ "gopls", "Go" },
-			{ "marksman", "Markdown" },
-			{ "glsl_analyzer", "GLSL shaders" },
-			{ "slangd", "Slang and HLSL shaders" },
-			{ "neocmakelsp", "CMake" },
+			{ "lua-language-server", "Lua", false, "lua_ls" },
+			{ "pyright-langserver", "Python", false, "pyright" },
+			{ "rust-analyzer", "Rust", false, "rust_analyzer" },
+			{ "typescript-language-server", "JavaScript and TypeScript", false, "ts_ls" },
+			{ "jdtls", "Java", false, "jdtls" },
+			{ "nixd", "Nix", false, "nixd" },
+			{ "gopls", "Go", false, "gopls" },
+			{ "marksman", "Markdown", false, "marksman" },
+			{ "glsl_analyzer", "GLSL shaders", false, "glsl_analyzer" },
+			{ "slangd", "Slang and HLSL shaders", false, "slangd" },
+			{ "neocmakelsp", "CMake", false, "neocmake" },
 		},
 	},
 	{
@@ -97,10 +98,12 @@ function M.check()
 	for _, section in ipairs(sections) do
 		vim.health.start(section.name)
 		for _, tool in ipairs(section.tools) do
-			local command, purpose, required = unpack(tool)
+			local command, purpose, required, managed_server = unpack(tool)
 			local path = vim.fn.exepath(command)
 			if path ~= "" then
 				vim.health.ok(("`%s` available: %s"):format(command, path))
+			elseif managed_server and nix_lsp.status(managed_server) == "nix" then
+				vim.health.ok(("`%s` available on demand through `nix shell`"):format(command))
 			elseif required then
 				vim.health.error(("`%s` is missing (%s)"):format(command, purpose))
 			else
@@ -129,7 +132,10 @@ function M.setup()
 				return
 			end
 
-			local missing = M.missing({ "clangd", "clang-format" })
+			local missing = M.missing({ "clang-format" })
+			if nix_lsp.status("clangd") == "unavailable" then
+				missing[#missing + 1] = "clangd"
+			end
 			if #missing == 0 then
 				return
 			end

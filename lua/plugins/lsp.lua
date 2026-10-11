@@ -15,11 +15,12 @@ return {
 		config = function()
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 			local health = require("dotfiles.health")
+			local nix_lsp = require("dotfiles.nix_lsp")
 			local obsidian = require("dotfiles.obsidian")
-			local function clangd_cmd()
-				local cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=iwyu" }
+			local function clangd_args()
+				local args = { "--background-index", "--clang-tidy", "--header-insertion=iwyu" }
 				if not health.has("gcc") and not health.has("g++") then
-					return cmd
+					return args
 				end
 
 				local drivers = {}
@@ -30,9 +31,9 @@ return {
 					end
 				end
 				if #drivers > 0 then
-					cmd[#cmd + 1] = "--query-driver=" .. table.concat(drivers, ",")
+					args[#args + 1] = "--query-driver=" .. table.concat(drivers, ",")
 				end
-				return cmd
+				return args
 			end
 
 			vim.diagnostic.config({
@@ -148,7 +149,50 @@ return {
 				end,
 			})
 
-			local dotfiles = vim.fn.expand("~/.dotfiles")
+			local commands = {}
+			local function start_rpc(command, dispatchers, config)
+				return vim.lsp.rpc.start(command, dispatchers, {
+					cwd = config.cmd_cwd,
+					env = config.cmd_env,
+					detached = config.detached,
+				})
+			end
+
+			local function managed_command(name, args)
+				return nix_lsp.command(name, args)
+			end
+
+			for name, spec in pairs(nix_lsp.servers) do
+				commands[name] = managed_command(name, spec.args)
+			end
+			commands.clangd = managed_command("clangd", clangd_args())
+
+			local function typescript_cmd(dispatchers, config)
+				local command
+				if config.root_dir then
+					local project_command = vim.fs.joinpath(config.root_dir, "node_modules", ".bin", "typescript-language-server")
+					if vim.fn.executable(project_command) == 1 then
+						command = { project_command, "--stdio" }
+					end
+				end
+				command = command or nix_lsp.command("ts_ls")
+				return start_rpc(command, dispatchers, config)
+			end
+
+			local function jdtls_cmd(dispatchers, config)
+				local workspace = vim.fn.stdpath("cache") .. "/jdtls/workspace"
+				if config.root_dir then
+					workspace = workspace .. "/" .. vim.fn.fnamemodify(config.root_dir, ":p:h:t")
+				end
+
+				local args = { "-data", workspace }
+				for argument in (vim.env.JDTLS_JVM_ARGS or ""):gmatch("%S+") do
+					args[#args + 1] = "--jvm-arg=" .. argument
+				end
+				local command = nix_lsp.command("jdtls", args)
+				return start_rpc(command, dispatchers, config)
+			end
+
 			local servers = {
 				pyright = {},
 				rust_analyzer = {
@@ -158,7 +202,7 @@ return {
 						},
 					},
 				},
-				ts_ls = {},
+				ts_ls = { cmd = typescript_cmd },
 				lua_ls = {
 					settings = {
 						Lua = {
@@ -168,23 +212,9 @@ return {
 						},
 					},
 				},
-				nixd = {
-					settings = {
-						nixd = {
-							nixpkgs = { expr = 'import (builtins.getFlake "' .. dotfiles .. '").inputs.nixpkgs { }' },
-							options = {
-								nixos = { expr = '(builtins.getFlake "' .. dotfiles .. '").nixosConfigurations.jin.options' },
-								["home-manager"] = {
-									expr = '(builtins.getFlake "'
-										.. dotfiles
-										.. '").nixosConfigurations.jin.options.home-manager.users.type.getSubOptions []',
-								},
-							},
-						},
-					},
-				},
+				nixd = {},
 				clangd = {
-					cmd = clangd_cmd(),
+					cmd = commands.clangd,
 				},
 				glsl_analyzer = {},
 				slangd = {
@@ -198,13 +228,7 @@ return {
 					},
 				},
 				neocmake = {},
-				java_language_server = {
-					root_dir = function(bufnr, on_dir)
-						local path = vim.api.nvim_buf_get_name(bufnr)
-						local marker = vim.fs.root(path, { "build.gradle", "build.gradle.kts", "pom.xml", ".git" })
-						on_dir(marker or vim.fs.dirname(path))
-					end,
-				},
+				jdtls = { cmd = jdtls_cmd },
 				gopls = {},
 				marksman = {
 					root_dir = function(bufnr, on_dir)
@@ -215,25 +239,11 @@ return {
 					end,
 				},
 			}
-			local server_commands = {
-				pyright = "pyright-langserver",
-				rust_analyzer = "rust-analyzer",
-				ts_ls = "typescript-language-server",
-				java_language_server = "java-language-server",
-				lua_ls = "lua-language-server",
-				nixd = "nixd",
-				clangd = "clangd",
-				glsl_analyzer = "glsl_analyzer",
-				slangd = "slangd",
-				neocmake = "neocmakelsp",
-				gopls = "gopls",
-				marksman = "marksman",
-			}
-
 			vim.lsp.config("*", { capabilities = capabilities })
 			for name, config in pairs(servers) do
-				vim.lsp.config(name, config)
-				if health.has(server_commands[name]) then
+				if commands[name] then
+					config.cmd = config.cmd or commands[name]
+					vim.lsp.config(name, config)
 					vim.lsp.enable(name)
 				end
 			end
