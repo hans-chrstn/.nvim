@@ -29,11 +29,21 @@ local function setup_lualine()
 					max_length = function()
 						return math.floor(vim.o.columns * 0.6)
 					end,
+						cond = function()
+							return vim.o.columns >= 100
+						end,
 					symbols = {
 						modified = " ●",
 						alternate_file = "",
 						directory = "",
 					},
+				},
+				{
+				"filename",
+				path = 0,
+				cond = function()
+					return vim.o.columns < 100
+				end,
 				},
 			},
 		},

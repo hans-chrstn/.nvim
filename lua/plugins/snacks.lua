@@ -267,13 +267,6 @@ return {
 				desc = "Rename File (LSP-aware)",
 			},
 			{
-				"<leader>bd",
-				function()
-					Snacks.bufdelete()
-				end,
-				desc = "Delete Buffer",
-			},
-			{
 				"<leader>bD",
 				function()
 					Snacks.bufdelete.all()

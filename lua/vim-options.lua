@@ -111,10 +111,6 @@ if vim.fn.executable("rg") == 1 then
 	vim.opt.grepformat = "%f:%l:%c:%m,%f:%l:%m"
 end
 
-if vim.fn.executable("prettier") == 1 then
-	vim.opt.formatprg = "prettier --stdin-filepath=%"
-end
-
 vim.diagnostic.config({
 	float = {
 		border = "rounded",

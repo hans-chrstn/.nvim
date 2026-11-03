@@ -63,7 +63,6 @@ return {
 			})
 
 			local lsp_group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
-			local highlight_group = vim.api.nvim_create_augroup("UserLspHighlight", { clear = true })
 
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = lsp_group,
@@ -96,7 +95,7 @@ return {
 					map({ "n", "x" }, "<leader>ca", function()
 						require("tiny-code-action").code_action()
 					end, "Code action with preview")
-					map("n", "<leader>cr", vim.lsp.buf.rename, "Rename symbol")
+					map("n", "<leader>cr", ":IncRename ", "Rename symbol with preview")
 					map("n", "K", function()
 						vim.lsp.buf.hover({ border = "rounded", max_width = 80, max_height = 20 })
 					end, "Hover documentation")
@@ -113,39 +112,16 @@ return {
 						vim.diagnostic.open_float({ focus = false })
 					end, "Line diagnostics")
 
-					if client:supports_method("textDocument/documentHighlight", bufnr) then
-						vim.api.nvim_clear_autocmds({ group = highlight_group, buffer = bufnr })
-						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-							buffer = bufnr,
-							group = highlight_group,
-							callback = vim.lsp.buf.document_highlight,
-						})
-						vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-							buffer = bufnr,
-							group = highlight_group,
-							callback = vim.lsp.buf.clear_references,
-						})
-					end
-
 					if client:supports_method("textDocument/inlayHint", bufnr) then
+						if vim.b[bufnr].inlay_hints_enabled == nil then
+							vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+						end
 						map("n", "<leader>th", function()
 							local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
 							vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+							vim.b[bufnr].inlay_hints_enabled = not enabled
 						end, "Toggle inlay hints")
 					end
-				end,
-			})
-
-			vim.api.nvim_create_autocmd("LspDetach", {
-				group = lsp_group,
-				callback = function(event)
-					vim.lsp.buf.clear_references()
-					vim.schedule(function()
-						local clients = vim.lsp.get_clients({ bufnr = event.buf, method = "textDocument/documentHighlight" })
-						if #clients == 0 then
-							vim.api.nvim_clear_autocmds({ group = highlight_group, buffer = event.buf })
-						end
-					end)
 				end,
 			})
 
@@ -202,11 +178,28 @@ return {
 						},
 					},
 				},
-				ts_ls = { cmd = typescript_cmd },
+			ts_ls = {
+				cmd = typescript_cmd,
+				settings = {
+					typescript = {
+						inlayHints = {
+							includeInlayParameterNameHints = "literals",
+							includeInlayVariableTypeHints = true,
+						},
+					},
+					javascript = {
+						inlayHints = {
+							includeInlayParameterNameHints = "literals",
+							includeInlayVariableTypeHints = true,
+						},
+					},
+				},
+			},
 				lua_ls = {
 					settings = {
 						Lua = {
 							diagnostics = { globals = { "vim", "Snacks" } },
+							hint = { enable = true },
 							workspace = { checkThirdParty = false },
 							telemetry = { enable = false },
 						},
@@ -229,7 +222,16 @@ return {
 				},
 				neocmake = {},
 				jdtls = { cmd = jdtls_cmd },
-				gopls = {},
+			gopls = {
+				settings = {
+					gopls = {
+						hints = {
+							parameterNames = true,
+							assignVariableTypes = true,
+						},
+					},
+				},
+			},
 				marksman = {
 					root_dir = function(bufnr, on_dir)
 						if obsidian.is_vault(bufnr) then

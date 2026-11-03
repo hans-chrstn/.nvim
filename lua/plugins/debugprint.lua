@@ -1,0 +1,28 @@
+return {
+	"andrewferrier/debugprint.nvim",
+	version = "*",
+	cmd = "Debugprint",
+	keys = {
+		"g?p",
+		"g?P",
+		"g?v",
+		"g?V",
+		"g?sp",
+		"g?sv",
+		"[g",
+		"]g",
+		"[G",
+		"]G",
+		{ "g?v", mode = "x" },
+		{ "g?V", mode = "x" },
+		{ "g?o", mode = "o" },
+		{ "g?O", mode = "o" },
+		{ "g?so", mode = "o" },
+		{ "<C-g>p", mode = "i" },
+		{ "<C-g>v", mode = "i" },
+	},
+	opts = {
+		highlight_lines = false,
+		picker = "snacks.picker",
+	},
+}

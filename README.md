@@ -36,6 +36,8 @@ The leader key is **`<Space>`**.
 | `<leader>bP` | Normal | Pick a buffer                |
 | `<leader>be` | Normal | Expand/collapse buffer names |
 
+The statusline shows the buffer list at 100 columns or wider and the current filename in narrower terminals.
+
 ### Neovim Tab Pages
 
 | Key                  | Mode   | Description            |
@@ -52,12 +54,14 @@ Language-server completion, diagnostics, hover, symbols, and signature help are 
 
 Language servers are resolved from the current environment first. When a server is missing and Nix is available, Neovim launches it with `nix shell nixpkgs#<package> --command <server>`. Project flakes are never evaluated automatically, and downloaded packages remain cached in the normal Nix store.
 
+Inlay hints are enabled when a supporting language server attaches. Lua, TypeScript/JavaScript, and Go have type and parameter hints configured; other servers use their own defaults. Use `<leader>th` to toggle hints for the current buffer.
+
 | Key           | Mode           | Description                                 |
 | :------------ | :------------- | :------------------------------------------ |
 | `<leader>dd`  | Normal         | Open diagnostics float                      |
 | `<leader>ch`  | Normal         | Check config dependencies                   |
 | `<leader>ca`  | Normal, Visual | Code Action with Preview                    |
-| `<leader>cr`  | Normal         | Rename Symbol                               |
+| `<leader>cr`  | Normal         | Start `:IncRename` with live preview         |
 | `gd`          | Normal         | Go to Definition                            |
 | `gD`          | Normal         | Go to Declaration                           |
 | `gi`          | Normal         | Go to Implementation                        |
@@ -127,6 +131,22 @@ Language servers are resolved from the current environment first. When a server 
 | `gcc`        | Normal         | Comment the current line             |
 | `]t`         | Normal         | Jump to Next Todo Comment            |
 | `[t`         | Normal         | Jump to Previous Todo Comment        |
+
+#### Debug Prints (debugprint.nvim)
+
+| Key | Mode | Description |
+| :-- | :--- | :---------- |
+| `g?p` / `g?P` | Normal | Insert a plain debug print below/above |
+| `g?v` / `g?V` | Normal, Visual | Insert a variable debug print below/above |
+| `g?sp` / `g?sv` | Normal | Surround with plain/variable debug prints |
+| `g?o` / `g?O` / `g?so` | Operator | Insert variable debug print below/above/around motion |
+| `<C-g>p` / `<C-g>v` | Insert | Insert plain/variable debug print in place |
+| `[g` / `]g` | Normal | Previous/next debug print |
+| `[G` / `]G` | Normal | First/last debug print |
+| `:Debugprint delete` | Command | Remove generated debug prints in buffer |
+| `:Debugprint commenttoggle` | Command | Comment or uncomment generated debug prints |
+| `:Debugprint search` / `:Debugprint qflist` | Command | Find generated debug prints in project |
+| `:Debugprint resetcounter` | Command | Reset persistent debug print counter |
 
 #### Treesitter Text Objects
 
@@ -329,7 +349,6 @@ Language servers are resolved from the current environment first. When a server 
 | `<leader>?`  | Normal | Show buffer-local keymaps (which-key)        |
 | `<leader>z`  | Normal | Toggle Zen Mode (snacks)                     |
 | `<leader>rn` | Normal | Rename File (LSP-aware) (snacks)             |
-| `<leader>bd` | Normal | Delete Buffer (snacks)                       |
 | `<leader>bD` | Normal | Delete All Buffers (snacks)                  |
 | `<leader>bo` | Normal | Delete Other Buffers (snacks)                |
 | `]r`         | Normal | Next Word Reference (snacks)                 |

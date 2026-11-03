@@ -16,7 +16,7 @@ end
 
 return {
 	"Bekaboo/dropbar.nvim",
-	lazy = false,
+	lazy = true,
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	config = function()
 		local default_enable = require("dropbar.configs").opts.bar.enable

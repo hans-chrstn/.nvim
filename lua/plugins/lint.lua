@@ -39,11 +39,19 @@ return {
 			end
 		end
 
+		local timers = {}
+		local lint_group = vim.api.nvim_create_augroup("UserLint", { clear = true })
 		vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
-			group = vim.api.nvim_create_augroup("UserLint", { clear = true }),
+			group = lint_group,
 			callback = function(event)
 				local bufnr = event.buf
-				vim.defer_fn(function()
+				local timer = timers[bufnr]
+				if not timer then
+					timer = vim.uv.new_timer()
+					timers[bufnr] = timer
+				end
+				timer:stop()
+				timer:start(100, 0, vim.schedule_wrap(function()
 					if not vim.api.nvim_buf_is_valid(bufnr) or not vim.api.nvim_buf_is_loaded(bufnr) then
 						return
 					end
@@ -51,7 +59,18 @@ return {
 						return
 					end
 					vim.api.nvim_buf_call(bufnr, lint.try_lint)
-				end, 100)
+				end))
+			end,
+		})
+		vim.api.nvim_create_autocmd("BufWipeout", {
+			group = lint_group,
+			callback = function(event)
+				local timer = timers[event.buf]
+				if timer then
+					timer:stop()
+					timer:close()
+					timers[event.buf] = nil
+				end
 			end,
 		})
 	end,

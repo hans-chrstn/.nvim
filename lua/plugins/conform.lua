@@ -3,7 +3,6 @@ return {
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
 		local conform = require("conform")
-		local health = require("dotfiles.health")
 		local function sync_clang_indent(bufnr)
 			if vim.fn.executable("clang-format") ~= 1 then
 				return
@@ -51,6 +50,7 @@ return {
 			lua = { "stylua" },
 			python = { "black" },
 			javascript = { "prettier" },
+			javascriptreact = { "prettier" },
 			typescript = { "prettier" },
 			typescriptreact = { "prettier" },
 			html = { "prettier" },
@@ -61,14 +61,6 @@ return {
 			nix = { "alejandra" },
 			java = { "google-java-format" },
 		}
-		local formatters_by_ft = {}
-		for filetype, formatters in pairs(configured_formatters) do
-			local available = vim.tbl_filter(health.has, formatters)
-			if #available > 0 then
-				formatters_by_ft[filetype] = available
-			end
-		end
-
 		conform.setup({
 			format_on_save = function(bufnr)
 				if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
@@ -76,7 +68,7 @@ return {
 				end
 				return { timeout_ms = 1000, lsp_format = "fallback" }
 			end,
-			formatters_by_ft = formatters_by_ft,
+			formatters_by_ft = configured_formatters,
 			formatters = {
 				["clang-format"] = {
 					prepend_args = { "--style=file", "--fallback-style=LLVM" },
